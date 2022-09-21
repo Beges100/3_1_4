@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/index").permitAll()
-                .antMatchers("/admin/**").authenticated()
+                .antMatchers("/admin/**").hasRole("USER")
                 .and()
                 .formLogin()
                 .and()

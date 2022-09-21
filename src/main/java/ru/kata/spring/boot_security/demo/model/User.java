@@ -36,13 +36,22 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     public User() {
     }
 
-    public User(String name, String surname, String age) {
+    public User(String name, String surname, String age, String password) {
         this.name = name;
         this.surname = surname;
         this.age = age;
+        this.password = password;
     }
 
     public Integer getId() {
@@ -89,12 +98,12 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return name;
     }
 
     @Override
