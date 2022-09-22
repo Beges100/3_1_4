@@ -18,10 +18,18 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public Role(String role) {
+        this.role = role;
+    }
+
     private String role;
 
     @ManyToMany(mappedBy = "roles")
     Set<User> users;
+
+    public Role() {
+
+    }
 
     public Set<User> getUsers() {
         return users;
@@ -32,7 +40,7 @@ public class Role implements GrantedAuthority {
     }
 
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

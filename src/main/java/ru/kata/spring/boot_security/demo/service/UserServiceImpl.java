@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class UserServiceImpl implements UserDetailsService {
+public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserRepositories userRepositories;
 
@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserDetailsService {
         user.setId(id);
         userRepositories.save(user);
     }
+
 
     @Transactional
     public User getUserAtId(Integer id) {
@@ -61,14 +62,11 @@ public class UserServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetails loadedUser;
 
-        User user = findByName(username);
-        if (user==null) {
-            throw new UsernameNotFoundException("User not found");
-        } else {
+        Optional<User> userOpt = Optional.of(findByName(username));
+
             loadedUser = new org.springframework.security.core.userdetails.User(
-                    user.getUsername(), user.getPassword(),
-                    user.getRoles());
-        }
+                    userOpt.get().getUsername(), userOpt.get().getPassword(),
+                    userOpt.get().getRoles());
         return loadedUser;
     }
 }
