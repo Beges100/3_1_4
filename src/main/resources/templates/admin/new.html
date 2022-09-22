@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
 </head>
 <body>
+    <a href="javascript: document.logoutForm.submit()" role="menuitem"> Logout</a>
+    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+        <input hidden type="submit" value="Sign Out"/>
+    </form>
 <form th:method="POST" th:action="@{/admin/saveUser}" th:object="${user}">
     <div class="form-group">
         <label for="name">Enter name: </label>
@@ -19,16 +23,30 @@
     </div>
     <br/>
     <div class="form-group">
+        <label for="password">Enter password: </label>
+        <input type="text" th:field="*{password}" id="password" class="form-control"/>
+    </div>
+    <br/>
+    <div class="form-group">
         <label for="age">Enter age: </label>
         <input type="text" th:field="*{age}" id="age" class="form-control"/>
         <br/>
-        <label>Role:</label>
-        <input type="checkbox" id="USER" class="form-control">USER</label>
-        <br>
-        <input type="checkbox" id="ADMIN" class="form-control">ADMIN</label>
+
+        <div class="form-group">
+            <label class="col-4 col-form-label">Roles: </label>
+            <div class="col-8">
+                <th:block th:each="role: ${roles}">
+                    <input type="checkbox" th:field="*{roles}"
+                           th:text="${role.getRole()}" th:value="${role.getId()}" class="m-2"/>
+                </th:block>
+            </div>
+        </div>
+
         <br>
         <input type="submit" value="Add" class="btn btn-primary"/>
     </div>
 </form>
+
+
 </body>
 </html>

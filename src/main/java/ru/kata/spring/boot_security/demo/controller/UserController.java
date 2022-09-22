@@ -1,11 +1,20 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import ru.kata.spring.boot_security.demo.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
+
+import java.security.Principal;
 
 @Controller
 @RequestMapping()
@@ -13,14 +22,17 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
-    public UserController(UserServiceImpl userService) {
+    private final RoleServiceImpl roleService;
+
+    public UserController(UserServiceImpl userService, RoleServiceImpl roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @RequestMapping("/admin/new")
     public String createUser(ModelMap model) {
         model.addAttribute("user", new User());
-        
+        model.addAttribute("roles", roleService.findAll());
         return "admin/new";
     }
 
@@ -31,11 +43,17 @@ public class UserController {
     }
 
 
-    @RequestMapping("/")
-    public String printUsers(ModelMap model) {
-            model.addAttribute("allUsers", userService.getAllUsers());
+    @RequestMapping("/user")
+    public String printUser(ModelMap model, Principal principal) {
+        model.addAttribute("user", userService.findByName(principal.getName()));
 
         return "user";
+    }
+
+    @RequestMapping("/")
+    public String printUsers() {
+
+        return "redirect:/user";
     }
 
     @RequestMapping("/admin")

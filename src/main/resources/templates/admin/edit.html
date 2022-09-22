@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
 </head>
 <body>
+<a href="javascript: document.logoutForm.submit()" role="menuitem"> Logout</a>
+    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+        <input hidden type="submit" value="Sign Out"/>
+    </form>
 <form th:method="PATCH" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}">
     <div class="form-group">
         <label for="name">Enter name: </label>
@@ -25,5 +29,7 @@
         <input type="submit" value="Update" class="btn btn-primary"/>
     </div>
 </form>
+
+
 </body>
 </html>
