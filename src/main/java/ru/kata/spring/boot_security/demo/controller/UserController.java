@@ -53,8 +53,12 @@ public class UserController {
     }
 
     @RequestMapping("/admin")
-    public String printUsersForAdmin(ModelMap model) {
+    public String printUsersForAdmin(ModelMap model, Principal principal) {
         model.addAttribute("allUsers", userService.getAllUsers());
+        model.addAttribute("user", userService.findByName(principal.getName()));
+
+        model.addAttribute("newUser", new User());
+        model.addAttribute("userRoles", roleService.findAll());
 
         return "/admin/users";
     }
