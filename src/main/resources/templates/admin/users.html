@@ -71,11 +71,11 @@
                         </thead>
 
                         <tbody>
-                        <div th:each="userTable : ${allUsers}" >
+                        <div th:each="user : ${allUsers}" >
                             <tr>
                                 <th scope="row" th:text="${user.getId()}">id</th>
                                 <td th:text="${user.getName()}">Name</td>
-                                <td th:text="${user.getSurname()}">Surname</td>
+                                <td th:text="${user.getSurname()}">Surname</td>пше
                                 <td th:text="${user.getAge()}">Age</td>
                                 <td th:text="${user.getEmail()}">Email</td>
                                 <td>
