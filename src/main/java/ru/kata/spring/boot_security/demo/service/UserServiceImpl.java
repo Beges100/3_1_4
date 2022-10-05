@@ -1,15 +1,18 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepositories;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -17,28 +20,34 @@ import java.util.Optional;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserRepositories userRepositories;
-
+    private final PasswordEncoder bCryptPasswordEncoder;
     @Autowired
-    public UserServiceImpl(UserRepositories userRepositories) {
+    public UserServiceImpl(UserRepositories userRepositories, @Lazy PasswordEncoder bCryptPasswordEncoder) {
         this.userRepositories = userRepositories;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
 
     @Transactional
-    public void updateUser(int id, User user) {
-        user.setId(id);
+    public void updateUser(User user) {
+        if (!user.getPassword().equals(Objects.requireNonNull(userRepositories.findById(user.getId()).orElse(null)).getPassword())){
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }else {
+            user.setPassword(Objects.requireNonNull(userRepositories.findById(user.getId()).orElse(null)).getPassword());
+        }
+
         userRepositories.save(user);
     }
 
 
     @Transactional
     public User getUserAtId(Integer id) {
-        Optional<User> findUser = userRepositories.findById(id);
-        return findUser.orElse(null);
+        return userRepositories.findById(id).orElse(null);
     }
 
     @Transactional
     public void saveUser(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepositories.save(user);
     }
 
